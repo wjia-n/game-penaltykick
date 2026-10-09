@@ -1,25 +1,101 @@
 import 'package:flutter/material.dart';
-import 'package:wajiha_game_core/wajiha_game_core.dart';
-import 'game_screen.dart';
+import 'package:flutter/services.dart';
+import 'screens/splash_screen.dart';
+import 'services/audio_service.dart';
+import 'services/iap_service.dart';
+import 'services/settings_service.dart';
+import 'theme/stadium_themes.dart';
 
-void main() => runApp(const PenaltyKickApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  final settings = KickSettings();
+  await settings.load();
+  final audio = KickAudio();
+  audio.configure(
+    musicOn: settings.musicOn,
+    sfxOn: settings.sfxOn,
+    volume: settings.volume,
+  );
+  final store = StoreService();
+  runApp(PenaltyKickApp(settings: settings, audio: audio, store: store));
+}
 
-class PenaltyKickApp extends StatelessWidget {
-  const PenaltyKickApp({super.key});
+class PenaltyKickApp extends StatefulWidget {
+  final KickSettings settings;
+  final KickAudio audio;
+  final StoreService store;
+  const PenaltyKickApp(
+      {super.key,
+      required this.settings,
+      required this.audio,
+      required this.store});
+
+  @override
+  State<PenaltyKickApp> createState() => _PenaltyKickAppState();
+}
+
+class _PenaltyKickAppState extends State<PenaltyKickApp>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    widget.audio.dispose();
+    widget.store.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Pause (not stop) on interruption so music resumes exactly where it
+    // left off; game screens additionally freeze their engines.
+    if (state == AppLifecycleState.paused) {
+      widget.audio.onAppPaused();
+    } else if (state == AppLifecycleState.resumed) {
+      widget.audio.onAppResumed();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GameShell(
-      variant: ShellVariant.comicBurst,
-      title: 'Penalty Kick',
-      tagline: 'Score past the keeper in penalty shootouts',
-      emoji: '⚽',
-      slug: 'penaltykick',
-      howToPlay:
-          '• Take turns as striker and keeper — 5 kicks each, then sudden death.\n• Striker: tap a zone of the goal to place your shot. Corners are riskier!\n• Keeper: tap a zone to dive. Read the striker\'s habits. 🧤\n• Most goals wins. Solo? The bot studies your shooting patterns. 🤖',
-      playerOptions: const [1, 2],
-      supportsBots: true,
-      gameBuilder: (ctx, players, cb) => PenaltyKickScreen(players: players, callbacks: cb),
+    return ListenableBuilder(
+      listenable: widget.settings,
+      builder: (_, _) => MaterialApp(
+        title: 'Penalty Kick',
+        debugShowCheckedModeBanner: false,
+        theme: _stadiumTheme(widget.settings),
+        home: SplashScreen(
+          audio: widget.audio,
+          settings: widget.settings,
+          store: widget.store,
+        ),
+      ),
     );
   }
+}
+
+ThemeData _stadiumTheme(KickSettings s) {
+  final t = StadiumThemes.byId(s.themeId, custom: s.customTheme);
+  final scheme = ColorScheme.fromSeed(
+    seedColor: t.accent,
+    brightness: Brightness.light,
+  );
+  return ThemeData(
+    useMaterial3: true,
+    colorScheme: scheme,
+    scaffoldBackgroundColor: t.panel,
+    appBarTheme: AppBarTheme(
+      backgroundColor: t.panelDark,
+      foregroundColor: Colors.white,
+    ),
+  );
 }
