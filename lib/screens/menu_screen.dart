@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../services/audio_service.dart';
 import '../services/iap_service.dart';
@@ -231,7 +233,7 @@ class _MenuScreenState extends State<MenuScreen> {
           children: [
             Text(title,
                 style: TextStyle(
-                    color: selected ? Colors.white : Colors.white80,
+                    color: selected ? Colors.white : Colors.white.withValues(alpha: 0.8),
                     fontWeight: FontWeight.w800,
                     fontSize: 14)),
             const SizedBox(height: 2),
