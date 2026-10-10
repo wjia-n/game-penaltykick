@@ -88,7 +88,6 @@ class _ProScreenState extends State<ProScreen> {
                 const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
             child: Column(
               children: [
-                _ComparisonCard(isPro: s.isPro),
                 const SizedBox(height: 16),
                                 _TipsCard(store: store, audio: widget.audio),
                 const SizedBox(height: 20),
