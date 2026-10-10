@@ -100,50 +100,6 @@ class _ProScreenState extends State<ProScreen> {
   }
 }
 
-class _BuyButton extends StatelessWidget {
-  final KickAudio audio;
-  final StoreService store;
-  final String label;
-  final Future<void> Function() onBuy;
-  const _BuyButton(
-      {required this.audio,
-      required this.store,
-      required this.label,
-      required this.onBuy});
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: store.purchaseInProgress,
-      builder: (_, busy, __) => SizedBox(
-        height: 52,
-        child: ElevatedButton(
-          onPressed: busy
-              ? null
-              : () {
-                  audio.click();
-                  onBuy();
-                },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.amber,
-            foregroundColor: Colors.black,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14)),
-          ),
-          child: busy
-              ? const SizedBox(
-                  width: 22,
-                  height: 22,
-                  child: CircularProgressIndicator(
-                      strokeWidth: 2.5, color: Colors.black))
-              : Text(label,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w900, fontSize: 15)),
-        ),
-      ),
-    );
-  }
-}
 
 class _TipsCard extends StatelessWidget {
   final StoreService store;
