@@ -65,7 +65,7 @@ class KickSettings extends ChangeNotifier {
   int kitStyle = 0;
   int wins = 0;
   int gamesPlayed = 0;
-  bool isPro = false;
+  bool isPro = true; // everything unlocked — no Pro version
 
   /// Custom stadium theme colors (ARGB ints). Defaults mirror Daybreak Arena.
   Map<String, int> customColors = Map.of(_defaultCustomColors);
@@ -134,7 +134,7 @@ class KickSettings extends ChangeNotifier {
     kitStyle = (p.getInt(_kKit) ?? 0).clamp(0, KitStyles.all.length - 1);
     wins = p.getInt(_kWins) ?? 0;
     gamesPlayed = p.getInt(_kGames) ?? 0;
-    isPro = p.getBool(_kIsPro) ?? false;
+    isPro = true; // everything unlocked
     for (final k in _defaultCustomColors.keys) {
       customColors[k] =
           p.getInt('$_kCustomPrefix$k') ?? _defaultCustomColors[k]!;
