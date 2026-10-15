@@ -187,7 +187,7 @@ class StadiumThemes {
     ),
     StadiumThemeDef(
       id: 'arctic',
-      name: 'Arctic Friendly',
+      name: 'Winter Friendly',
       isPro: true,
       skyTop: Color(0xFF9AC2DC),
       skyBottom: Color(0xFFE8F2F8),
