@@ -197,25 +197,6 @@ class KickAudio {
     return out;
   }
 
-  /// Stadium drum pulse: kick-drum-ish beats with a chant-ish bed.
-  List<double> _drumPulse(double secs, double bpm) {
-    final n = (_rate * secs).round();
-    final out = List<double>.filled(n, 0);
-    final beat = 60.0 / bpm;
-    for (double tb = 0; tb < secs; tb += beat) {
-      final start = (_rate * tb).round();
-      final len = (_rate * 0.18).round();
-      for (int i = 0; i < len && start + i < n; i++) {
-        final t = i / _rate;
-        out[start + i] +=
-            (0.85 * sin(2 * pi * 62 * t) * exp(-t * 24) +
-                0.3 * (_rand.nextDouble() * 2 - 1) * exp(-t * 60)) *
-                0.5;
-      }
-    }
-    return out;
-  }
-
   Uint8List _clip(String key, List<double> Function() build) =>
       _cache.putIfAbsent(key, () => _wav(build()));
 
