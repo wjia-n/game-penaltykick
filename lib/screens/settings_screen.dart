@@ -3,6 +3,7 @@ import '../services/audio_service.dart';
 import '../services/settings_service.dart';
 import '../theme/stadium_themes.dart';
 import '../widgets/name_field.dart';
+import '../transfer/transfer_ui.dart';
 
 /// Settings: audio toggles + volume, player names, stats.
 class SettingsScreen extends StatefulWidget {
@@ -45,6 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: [
+              TransferSaveTile(gameSlug: 'penaltykick'),
             _card(t, [
               _switchRow(t, 'Music', s.musicOn, (v) {
                 s.setMusic(v);
