@@ -643,7 +643,9 @@ class _MenuScreenState extends State<MenuScreen> {
       icon: Icon(Icons.workspace_premium,
           color: s.isPro ? Colors.amber : t.accent),
       label: Text(
-        s.isPro ? 'PRO active — thank you!' : 'Go PRO — unlock everything',
+        defaultTargetPlatform == TargetPlatform.iOS
+            ? '⭐ Gold Star'
+            : (s.isPro ? 'PRO active — thank you!' : 'Go PRO — unlock everything'),
         style: const TextStyle(
             color: Colors.white, fontWeight: FontWeight.w800),
       ),
