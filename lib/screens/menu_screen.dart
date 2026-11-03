@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../services/audio_service.dart';
 import '../services/iap_service.dart';
@@ -679,12 +680,12 @@ class _MenuScreenState extends State<MenuScreen> {
   void _proNudge(StadiumThemeDef t) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('That\'s a PRO feature — check out PRO!',
+        content: Text(defaultTargetPlatform == TargetPlatform.iOS ? 'Check out the Gold Star!' : 'That\'s a PRO feature — check out PRO!',
             style: TextStyle(color: Colors.white)),
         backgroundColor: t.panelDark,
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
-          label: 'PRO',
+          label: defaultTargetPlatform == TargetPlatform.iOS ? '⭐ Gold Star' : 'PRO',
           textColor: t.accent,
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
